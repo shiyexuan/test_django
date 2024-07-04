@@ -9,14 +9,10 @@ docutils
 geoip2; python_version < '3.12'
 jinja2 >= 2.11.0
 numpy; python_version < '3.12'
-Pillow >= 6.2.1; sys_platform != 'win32' or python_version < '3.12'
-pylibmc; sys_platform != 'win32'
 pymemcache >= 3.4.0
 pytz
-pywatchman; sys_platform != 'win32'
 PyYAML
 redis >= 3.4.0
 selenium
 sqlparse >= 0.3.1
 tzdata
-colorama; sys_platform == 'win32'
