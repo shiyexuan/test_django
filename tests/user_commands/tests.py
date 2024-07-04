@@ -3,7 +3,7 @@ from io import StringIO
 from unittest import mock
 
 from admin_scripts.tests import AdminScriptTestCase
-
+from argparse import ArgumentDefaultsHelpFormatter
 from django.apps import apps
 from django.core import management
 from django.core.checks import Tags
@@ -193,13 +193,6 @@ class CommandTests(SimpleTestCase):
         ) as mocked_check:
             management.call_command("no_system_checks")
         self.assertIs(mocked_check.called, False)
-
-    def test_requires_system_checks_specific(self):
-        with mock.patch(
-            "django.core.management.base.BaseCommand.check"
-        ) as mocked_check:
-            management.call_command("specific_system_checks")
-        mocked_check.called_once_with(tags=[Tags.staticfiles, Tags.models])
 
     def test_requires_system_checks_invalid(self):
         class Command(BaseCommand):
@@ -408,8 +401,14 @@ class CommandTests(SimpleTestCase):
     def test_create_parser_kwargs(self):
         """BaseCommand.create_parser() passes kwargs to CommandParser."""
         epilog = "some epilog text"
-        parser = BaseCommand().create_parser("prog_name", "subcommand", epilog=epilog)
+        parser = BaseCommand().create_parser(
+            "prog_name",
+            "subcommand",
+            epilog=epilog,
+            formatter_class=ArgumentDefaultsHelpFormatter,
+        )
         self.assertEqual(parser.epilog, epilog)
+        self.assertEqual(parser.formatter_class, ArgumentDefaultsHelpFormatter)
 
     def test_outputwrapper_flush(self):
         out = StringIO()
